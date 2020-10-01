@@ -10,55 +10,43 @@ export default class App extends Component {
     bad: 0,
   };
 
+  updateState = handleClick => {
+    this.setState(state => {
+      return {
+        [handleClick]: state[handleClick] + 1,
+      };
+    });
+  };
+
   countTotalFeedback = () => {
     const { good, bad, neutral } = this.state;
     return good + bad + neutral;
   };
 
   countPositiveFeedbackPercentage = () => {
-    const { good } = this.state;
-    const total = this.countTotalFeedback();
-    return Math.round((good / total) * 100);
-  };
-
-  LeaveFeedback = typeBtn => {
-    this.setState(prevstate => {
-      return {
-        [typeBtn]: prevstate[typeBtn] + 1,
-      };
-    });
+    return Math.round((this.state.good / this.countTotalFeedback()) * 100);
   };
 
   render() {
     const { good, neutral, bad } = this.state;
-    const total = this.countTotalFeedback();
-    const positivePercentage = this.countPositiveFeedbackPercentage();
-    
     return (
-      <Container>
-        <Section title={'Please leave feedback'}>
+      <>
+        <Section title="Please leave feedback">
           <FeedbackOptions
-            options={['good', 'neutral', 'bad']}
-            onLeaveFeedback={this.leaveFeedback}
+            options={Object.keys(this.state)}
+            onLeaveFeedback={this.updateState}
           />
         </Section>
-
-        <Section title={'Statistics'}>
-          {total === 0 ? (
-            <Notification message="No feedback given" />
-          ) : (
-            <Statistics
-              good={good}
-              neutral={neutral}
-              bad={bad}
-              total={total}
-              positivePercentage={positivePercentage}
-            />
-          )}
+        <Section title="Statistics">
+          <Statistics
+            good={good}
+            neutral={neutral}
+            bad={bad}
+            total={this.countTotalFeedback()}
+            positivePercentage={this.countPositiveFeedbackPercentage()}
+          />
         </Section>
-      </Container>
+      </>
     );
   }
 }
-
-export default App;
