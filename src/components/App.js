@@ -10,10 +10,10 @@ export default class App extends Component {
     bad: 0,
   };
 
-  updateState = handleClick => {
-    this.setState(state => {
+  updateState = feedback => {
+    this.setState(prevState => {
       return {
-        [handleClick]: state[handleClick] + 1,
+        [feedback]: prevState[feedback] + 1,
       };
     });
   };
